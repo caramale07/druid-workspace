@@ -1,0 +1,36 @@
+{
+    "type": "index",
+    "spec": {
+      "dataSchema": {
+        "dataSource": "products",
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            { "name": "product_id", "type": "long" },
+            { "name": "product_name", "type": "string" },
+            { "name": "category", "type": "string" },
+            { "name": "price", "type": "float" }
+          ]
+        }
+      },
+      "ioConfig": {
+        "type": "local",
+        "inputSource": {
+          "type": "local",
+          "baseDir": "sql/star_schema_data.sql",
+          "filter": "products.json"
+        },
+        "inputFormat": {
+          "type": "json"
+        }
+      },
+      "tuningConfig": {
+        "type": "index",
+        "maxRowsPerSegment": 5000000
+      }
+    }
+  }
+  
