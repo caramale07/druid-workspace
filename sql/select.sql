@@ -172,3 +172,25 @@ GROUP BY
     d.day_name
 ORDER BY
     FIELD(d.day_name, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+
+
+SELECT
+    age_group,
+    HLL_COUNT.DISTINCT(customer_id) AS total_customers,
+    total_spent
+FROM (
+    SELECT
+        CASE
+            WHEN c.age BETWEEN 18 AND 25 THEN '18-25'
+            WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+            WHEN c.age BETWEEN 36 AND 50 THEN '36-50'
+            WHEN c.age > 50 THEN '50+'
+        END AS age_group,
+        c.customer_id,
+        SUM(s.total_amount) AS total_spent
+    FROM customers c
+    JOIN "sales_transactions_1m" s ON c.customer_id = s.customer_id
+    GROUP BY age_group, c.customer_id
+) subquery
+GROUP BY age_group
+ORDER BY total_spent DESC;
